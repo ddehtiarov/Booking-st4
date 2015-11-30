@@ -1,0 +1,35 @@
+package ua.nure.degtuaryov.SummaryTask4.web.command;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import ua.nure.degtuaryov.SummaryTask4.db.Constants;
+import ua.nure.degtuaryov.SummaryTask4.db.bean.VoyageBean;
+import ua.nure.degtuaryov.SummaryTask4.db.dao.DAOFactory;
+import ua.nure.degtuaryov.SummaryTask4.web.Path;
+
+public class ViewVoyagesListCommand extends Command {
+
+	private static final long serialVersionUID = 5155133002218452601L;
+
+	@Override
+	public String execute(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		String forward = Path.PAGE_ERROR_PAGE;
+		DAOFactory.setDaoFactoryFCN(Constants.DAO_FACTORY);
+		DAOFactory daoFactory = DAOFactory.getInstance();
+		List<VoyageBean> voyageBeans = daoFactory.getVoyageDAO().findAllVoyageBeans();
+		if (voyageBeans.isEmpty()) {
+			request.setAttribute("error", "Try again later, we have some errors at the server!");
+		}
+		//request.setAttribute("voyageBeans", voyageBeans);
+		forward = Path.PAGE_SHOW_ALL_VOYAGES;
+
+		return forward;
+	}
+
+}

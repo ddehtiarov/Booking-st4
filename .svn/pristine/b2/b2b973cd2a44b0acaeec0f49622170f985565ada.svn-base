@@ -1,0 +1,103 @@
+package ua.nure.degtuaryov.SummaryTask4.db.bean;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Route;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Station;
+
+/**
+ * 
+ * RouteStationsBean is a bean that contains all stations in one route,and we
+ * have access to them from one object
+ * 
+ * @author Degtuaryow
+ *
+ */
+public class RouteStationsBean implements Serializable {
+
+	private static final long serialVersionUID = 5876854063178982206L;
+
+	private List<StationTime> stationTimesList;
+
+	private Route route;
+
+	public RouteStationsBean() {
+		stationTimesList = new ArrayList<StationTime>();
+	}
+
+	public Route getRoute() {
+		return route;
+	}
+
+	public void setRoute(Route route) {
+		this.route = route;
+	}
+
+	public List<StationTime> getStationTimesList() {
+		return stationTimesList;
+	}
+
+	public void setStationTimesList(Station station, int travelTime, int stopTime) {
+		StationTime stationTime = new StationTime();
+		stationTime.setStation(station);
+		stationTime.setStopTime(stopTime);
+		stationTime.setTravelTime(travelTime);
+		stationTimesList.add(stationTime);
+	}
+
+	@Override
+	public String toString() {
+		return "RouteStationsBean [stationTimesList=" + stationTimesList + ", route=" + route + "]";
+	}
+
+	/**
+	 * 
+	 * StationTime is a helpful object for working with RouteStationsBean, it
+	 * contains 1 station and its time to another station
+	 * 
+	 * @author Degtuaryow
+	 *
+	 */
+	public static class StationTime implements Serializable {
+
+		private static final long serialVersionUID = -7390754851827849713L;
+
+		private Station station;
+
+		private int travelTime;
+
+		private int stopTime;
+
+		public Station getStation() {
+			return station;
+		}
+
+		public void setStation(Station station) {
+			this.station = station;
+		}
+
+		public int getTravelTime() {
+			return travelTime;
+		}
+
+		public void setTravelTime(int travelTime) {
+			this.travelTime = travelTime;
+		}
+
+		public int getStopTime() {
+			return stopTime;
+		}
+
+		public void setStopTime(int stopTime) {
+			this.stopTime = stopTime;
+		}
+
+		@Override
+		public String toString() {
+			return "StationTime [station=" + station + ", travelTime=" + travelTime + ", stopTime=" + stopTime + "]";
+		}
+	}
+
+}

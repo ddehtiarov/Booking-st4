@@ -1,0 +1,14 @@
+Sat Aug 15 01:40:47 MSK 2015 : Сетевой сервер Apache Derby Network Server - 10.11.1.2 - (1629631) запущен и готов принимать соединения на порту 1527 на {3} 
+----------------------------------------------------------------
+Sat Aug 15 01:41:10 MSK 2015:
+ Производится загрузка Derby версии The Apache Software Foundation - Apache Derby - 10.11.1.2 - (1629631): экземпляр a816c00e-014f-2e5f-6244-00000465ecb8
+в каталоге базы данных G:\Projects\workspaceEE\SummaryTask4\db\bookingDB AntClassLoader[C:\Program Files\Java\jdk1.8.0_51\db\lib\derby.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyLocale_cs.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyLocale_de_DE.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyLocale_es.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyLocale_fr.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyLocale_hu.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyLocale_it.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyLocale_ja_JP.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyLocale_ko_KR.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyLocale_pl.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyLocale_pt_BR.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyLocale_ru.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyLocale_zh_CN.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyLocale_zh_TW.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyclient.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbynet.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyoptionaltools.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbyrun.jar;C:\Program Files\Java\jdk1.8.0_51\db\lib\derbytools.jar] 
+
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_51-b16
+user.dir=G:\Projects\workspaceEE\SummaryTask4
+os.name=Windows 8.1
+os.arch=amd64
+os.version=6.3
+derby.system.home=null
+Запущен загрузчик классов базы данных - derby.database.classpath=''

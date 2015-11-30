@@ -1,0 +1,62 @@
+package ua.nure.degtuaryov.SummaryTask4.web;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.derby.tools.sysinfo;
+import org.apache.log4j.Logger;
+
+import com.google.gson.Gson;
+
+import ua.nure.degtuaryov.SummaryTask4.db.Constants;
+import ua.nure.degtuaryov.SummaryTask4.db.bean.VoyageBean;
+import ua.nure.degtuaryov.SummaryTask4.db.dao.DAOFactory;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Station;
+import ua.nure.degtuaryov.SummaryTask4.web.command.LoginCommand;
+
+@WebServlet("/getVoyages")
+public class GetVoyagesAPI extends HttpServlet {
+
+	private static final long serialVersionUID = 3903617600039343228L;
+
+	private static final Logger log = Logger.getLogger(LoginCommand.class);
+
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		log.debug("GetVoyagesAPI starts");
+		DAOFactory.setDaoFactoryFCN(Constants.DAO_FACTORY);
+		DAOFactory daoFactory = DAOFactory.getInstance();
+		List<VoyageBean> voyageBeans = daoFactory.getVoyageDAO().findAllVoyageBeans();
+		String type = request.getParameter("type");
+		if (type != null && !type.isEmpty()) {
+			switch (type) {
+			case "GET_BY_DATE": {
+				String date = request.getParameter("date");
+				if (date != null && !date.isEmpty()) {
+
+				}
+			}
+				break;
+			case "SORT_BY_DATE":
+				Collections.reverse(voyageBeans);
+				break;
+			default:
+				break;
+			}
+		}
+		String json = new Gson().toJson(voyageBeans);
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(json);
+		log.debug("GetVoyagesAPI ends");
+	}
+
+}

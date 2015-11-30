@@ -1,0 +1,111 @@
+package ua.nure.degtuaryov.SummaryTask4.web.command;
+
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
+
+import org.apache.log4j.Logger;
+
+import ua.nure.degtuaryov.SummaryTask4.db.Benefit;
+import ua.nure.degtuaryov.SummaryTask4.db.Constants;
+import ua.nure.degtuaryov.SummaryTask4.db.bean.BookingBean;
+import ua.nure.degtuaryov.SummaryTask4.db.bean.VoyageBean;
+import ua.nure.degtuaryov.SummaryTask4.db.dao.DAOFactory;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Booking;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Client;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Train;
+import ua.nure.degtuaryov.SummaryTask4.web.Path;
+
+/**
+ * BuyTicketCommand command.
+ * 
+ * @author Dedtuaryow
+ * 
+ */
+public class BuyTicketCommand extends Command {
+
+	private static final long serialVersionUID = 3903699900039343228L;
+	
+	private static final String WRONG = "wrong";
+
+	private static final Logger LOGGER = Logger.getLogger(LoginCommand.class);
+
+	@Override
+	public String execute(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		LOGGER.debug("BuyTicketCommand starts");
+		DAOFactory.setDaoFactoryFCN(Constants.DAO_FACTORY);
+		DAOFactory daoFactory = DAOFactory.getInstance();
+		Locale local = new Locale(Config.get(request.getSession(), Config.FMT_LOCALE).toString());
+		ResourceBundle rb = ResourceBundle.getBundle("resources", local);
+		HttpSession session = request.getSession();
+		String forward = Path.PAGE_BUY_TICKET;
+		String benefitReasonStr = request.getParameter("benefitReason");
+		BookingBean bookingBean = (BookingBean) session.getAttribute("bookingBean");
+		if (benefitReasonStr != null && !benefitReasonStr.isEmpty() && bookingBean != null) {
+			VoyageBean voyageBean = daoFactory.getVoyageDAO().findVoyageBeanByVoyage(
+					daoFactory.getVoyageDAO().findVoyageById(bookingBean.getVoyageBean().getId()));
+			Train train = voyageBean.getTrain();
+			bookingBean.setVoyageBean(voyageBean);
+			int seats = 0;
+			int trainSeat = 0;
+			switch (bookingBean.getSeat().getType()) {
+			case "coupe":
+				seats = voyageBean.getCoupeSeat();
+				trainSeat = train.getCoupeSeat();
+				break;
+			case "reserved":
+				seats = voyageBean.getReservedSeat();
+				trainSeat = train.getReservedSeat();
+				break;
+			case "general":
+				seats = voyageBean.getGeneralSeat();
+				trainSeat = train.getGeneralSeat();
+				break;
+			default:
+				request.setAttribute(WRONG, rb.getString("buy_ticket_page.invalid_type_of_seat_error"));
+				return Path.PAGE_BUY_TICKET;
+			}
+			if (seats >= 1) {
+				Client client = (Client) session.getAttribute("client");
+				int price = bookingBean.getBooking().getPrice();
+				Benefit benefit = Benefit.valueOf(benefitReasonStr.toUpperCase());
+				Booking booking = bookingBean.getBooking();
+				booking.setPrice(price * benefit.getCoefficient() / 100);
+				booking.setBenefitId(benefit.ordinal());
+				booking.setDate(new Timestamp(System.currentTimeMillis()));
+				booking.setClientId(client.getId());
+				booking.setVoyageId(bookingBean.getVoyageBean().getId());
+				booking.setTripId(bookingBean.getTrip().getId());
+				booking.setSeatNumber(trainSeat - seats + 1);
+				if (daoFactory.getBookingDAO().addBooking(booking)) {
+					daoFactory.getVoyageDAO().buyTicket(
+							(daoFactory.getVoyageDAO().findVoyageById(booking.getVoyageId())),
+							bookingBean.getSeat().getType());
+					request.setAttribute("success", "add");
+					session.setAttribute("bookingBean", null);
+					forward = Path.COMMAND_VIEW_SHOW_ALL_TICKETS;
+				} else {
+					request.setAttribute(WRONG, rb.getString("buy_ticket_page.error"));
+					forward = Path.PAGE_BUY_TICKET;
+				}
+			} else {
+				request.setAttribute(WRONG, rb.getString("buy_ticket_page.somebody_quiqlier_error"));
+				return Path.PAGE_BUY_TICKET;
+			}
+		} else {
+			request.setAttribute(WRONG, rb.getString("buy_ticket_page.invalid_error"));
+			forward = Path.PAGE_BUY_TICKET;
+		}
+		LOGGER.debug("BuyTicketCommand ends");
+		return forward;
+	}
+
+}

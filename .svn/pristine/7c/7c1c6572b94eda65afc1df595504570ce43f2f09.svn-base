@@ -1,0 +1,89 @@
+<%@ include file="/WEB-INF/jspf/directive/page.jspf"%>
+<%@ include file="/WEB-INF/jspf/directive/taglib.jspf"%>
+
+<html>
+<head>
+<c:set var="title" value="Ticket info" />
+
+<%@ include file="/WEB-INF/jspf/headContent.jspf"%>
+
+</head>
+<body>
+	<%@ include file="/WEB-INF/jspf/header.jspf"%>
+	<c:set var="client" value="${sessionScope.client}"></c:set>
+	<br>
+	<c:if test="${empty wrong}">
+		<input type="hidden" name="command" value="buyTicket.do" />
+		<div id="middle">
+			<div>
+				<div>
+					<div id="content">
+						<div class="cheque">
+							<div class="blank electronic" data-doctype="return:travel">
+								<table class="part1">
+									<tr>
+										<td class="nowrap">${bookingBean.voyageBean.routeStationsBean.route.name}</td>
+										<td class="bold arial v-top">Ticket</td>
+										<td class="bold nowrap">Dima product tm</td>
+										<td class="bold arial w-right"></td>
+									</tr>
+								</table>
+								<table class="part2">
+									<tr>
+										<td colspan="2">Client</td>
+										<td>${client.surname}${client.firstName}
+											${client.secondName}</td>
+										<td>Train</td>
+										<td class="align-right ticket_info w-right">${bookingBean.voyageBean.train.name}</td>
+									</tr>
+									<tr>
+										<td class="nowrap w1">From</td>
+										<td class="w1">${bookingBean.trip.stationBegin.id}</td>
+										<td class="upper ticket_info">${bookingBean.trip.stationBegin.title}</td>
+										<td>Train info</td>
+										<td class="align-right ticket_info">${bookingBean.seat.getType()}</td>
+									</tr>
+									<tr>
+										<td class="nowrap">To</td>
+										<td>${bookingBean.trip.stationEnd.id}</td>
+										<td class="upper ticket_info">${bookingBean.trip.stationEnd.title}</td>
+										<td>Seat</td>
+										<td class="align-right ticket_info">${bookingBean.booking.seatNumber}</td>
+									</tr>
+									<tr>
+										<td colspan="2">Arrival time:</td>
+										<td class="ticket_info">${bookingBean.booking.arrivalTime}</td>
+										<td>Benefit</td>
+										<td class="align-right">${bookingBean.benefit.getReason()}</td>
+									</tr>
+									<tr>
+										<td colspan="2">Departure time:</td>
+										<td class="ticket_info" colspan="3">${bookingBean.booking.departureTime}</td>
+									</tr>
+									<tr>
+										<td colspan="5">Total price:
+											${bookingBean.booking.price/100} grn</td>
+									</tr>
+								</table>
+								<br> <br> <input type="button"
+									onclick="location.href='javascript:history.back()';"
+									value="Back" />
+							</div>
+							<div class="clear"></div>
+						</div>
+						<div class="clear"></div>
+						<br />
+					</div>
+				</div>
+			</div>
+		</div>
+	</c:if>
+	<c:if test="${not empty wrong}">
+		<div class="msg">${wrong}
+			<input type="button"
+				onclick="location.href='javascript:history.back()';" value="<fmt:message key="show_ticket_page.back"/>" />
+		</div>
+	</c:if>
+</body>
+</html>
+

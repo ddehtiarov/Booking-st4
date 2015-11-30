@@ -1,0 +1,159 @@
+package ua.nure.degtuaryov.SummaryTask4.db.dao.derby;
+
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.naming.Context;
+import javax.sql.DataSource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Client;
+import ua.nure.degtuaryov.SummaryTask4.utils.Password;
+
+
+public class DerbyClientDAOTest {
+
+	private DerbyClientDAO clientDAO;
+
+	@Mock
+	DataSource dataSourse;
+
+	@Mock
+	Context context;
+
+	@Mock
+	private Connection mockConnection;
+
+	@Mock
+	private PreparedStatement mockStatement;
+
+	@Mock
+	private ResultSet mockResultSet;
+
+	@Before
+	public void setUpBeforeClass() throws Exception {
+		clientDAO = new DerbyClientDAO();
+//		PowerMockito.mockStatic(DerbyDAOFactory.class);
+//		Mockito.when(DerbyDAOFactory.getConnection()).thenReturn(mockConnection);
+//		Mockito.when(dataSourse.getConnection()).thenReturn(mockConnection);
+//
+//		Mockito.doNothing().when(mockStatement).setString(Mockito.anyInt(), Mockito.anyString());
+//		Mockito.doNothing().when(mockStatement).setLong(Mockito.anyInt(), Mockito.anyLong());
+//		Mockito.when(mockConnection.prepareStatement(Mockito.anyString())).thenReturn(mockStatement);
+//
+//		Mockito.doNothing().when(mockConnection).commit();
+//		Mockito.doNothing().when(mockResultSet).close();
+//		Mockito.doNothing().when(mockConnection).close();
+//		Mockito.doNothing().when(mockConnection).rollback();
+//		Mockito.doNothing().when(mockStatement).close();
+		
+	}
+
+//	@Test
+//	public void testfindAllClients() throws SQLException {
+//		Mockito.when(mockStatement.executeQuery()).thenReturn(mockResultSet);
+//		Mockito.when(mockResultSet.next()).thenReturn(Boolean.TRUE, Boolean.FALSE);
+//
+//		clientDAO.findAllClients();
+//
+//		// Mockito.verify(mockConnection).prepareStatement(Mockito.anyString());
+//
+//	}
+//
+//	@Test
+//	public void testFindClientByLogin() throws SQLException, NoSuchAlgorithmException, UnsupportedEncodingException {
+//		PowerMockito.mockStatic(Password.class);
+//		Mockito.when(Password.hash(Mockito.anyString())).thenReturn(null);
+//		Mockito.doNothing().when(mockStatement).setString(Mockito.anyInt(), Mockito.anyString());
+//		Mockito.when(mockStatement.executeQuery()).thenReturn(mockResultSet);
+//		Mockito.when(mockResultSet.next()).thenReturn(Boolean.TRUE, Boolean.FALSE);
+//		clientDAO.findClientByLogin(Mockito.anyString());
+//		// Mockito.verify(mockResultSet, Mockito.times(1)).next();
+//	}
+//
+//	@Test
+//	public void testFindClientByLogin2() throws SQLException, NoSuchAlgorithmException, UnsupportedEncodingException {
+//		PowerMockito.mockStatic(Password.class);
+//		Mockito.when(Password.hash(Mockito.anyString())).thenReturn(null);
+//		Mockito.doNothing().when(mockStatement).setString(Mockito.anyInt(), Mockito.anyString());
+//		Mockito.when(mockStatement.executeQuery()).thenReturn(mockResultSet);
+//		Mockito.when(mockResultSet.next()).thenReturn(Boolean.TRUE, Boolean.FALSE);
+//		clientDAO.findClientByLogin("ddd");
+//		// Mockito.verify(mockResultSet, Mockito.times(1)).next();
+//	}
+//
+//	@Test
+//	public void testFindClientByLoginPass()
+//			throws SQLException, NoSuchAlgorithmException, UnsupportedEncodingException {
+//		PowerMockito.mockStatic(Password.class);
+//		Mockito.when(Password.hash(Mockito.anyString())).thenReturn(null);
+//		Mockito.doNothing().when(mockStatement).setString(Mockito.anyInt(), Mockito.anyString());
+//		Mockito.when(mockStatement.executeQuery()).thenReturn(mockResultSet);
+//		Mockito.when(mockResultSet.next()).thenReturn(Boolean.TRUE, Boolean.FALSE);
+//		clientDAO.findClientByLoginPass(Mockito.anyString(), Mockito.anyString());
+//		// Mockito.verify(mockResultSet, Mockito.times(1)).next();
+//	}
+//
+//	@Test
+//	public void testFindClientByLoginPass2()
+//			throws SQLException, NoSuchAlgorithmException, UnsupportedEncodingException {
+//		PowerMockito.mockStatic(Password.class);
+//		Mockito.when(Password.hash(Mockito.anyString())).thenReturn(null);
+//		Mockito.doNothing().when(mockStatement).setString(Mockito.anyInt(), Mockito.anyString());
+//		Mockito.when(mockStatement.executeQuery()).thenReturn(mockResultSet);
+//		Mockito.when(mockResultSet.next()).thenReturn(Boolean.TRUE, Boolean.FALSE);
+//		clientDAO.findClientByLoginPass("ddd", "ddd");
+//		// Mockito.verify(mockResultSet, Mockito.times(1)).next();
+//	}
+//	
+//	@Test
+//	public void testfindClientById()
+//			throws SQLException, NoSuchAlgorithmException, UnsupportedEncodingException {
+//		PowerMockito.mockStatic(Password.class);
+//		Mockito.when(Password.hash(Mockito.anyString())).thenReturn(null);
+//		Mockito.doNothing().when(mockStatement).setString(Mockito.anyInt(), Mockito.anyString());
+//		Mockito.when(mockStatement.executeQuery()).thenReturn(mockResultSet);
+//		Mockito.when(mockResultSet.next()).thenReturn(Boolean.TRUE, Boolean.FALSE);
+//		clientDAO.findClientById(1);
+//	}
+//	
+//	@Test
+//	public void testfindClientById2()
+//			throws SQLException, NoSuchAlgorithmException, UnsupportedEncodingException {
+//		PowerMockito.mockStatic(Password.class);
+//		Mockito.when(Password.hash(Mockito.anyString())).thenReturn(null);
+//		Mockito.doNothing().when(mockStatement).setString(Mockito.anyInt(), Mockito.anyString());
+//		Mockito.when(mockStatement.executeQuery()).thenReturn(mockResultSet);
+//		Mockito.when(mockResultSet.next()).thenReturn(Boolean.TRUE, Boolean.FALSE);
+//		clientDAO.findClientById(Mockito.anyInt());
+//	}
+//	
+//	@Test
+//	public void testaddClient() throws SQLException, NoSuchAlgorithmException, UnsupportedEncodingException{
+//		PowerMockito.mockStatic(Password.class);
+//		Mockito.when(Password.hash(Mockito.anyString())).thenReturn(null);
+//		Mockito.doNothing().when(mockStatement).setString(Mockito.anyInt(), Mockito.anyString());
+//		Mockito.when(mockStatement.executeUpdate()).thenReturn(Mockito.anyInt());
+//		clientDAO.addClient(new Client());
+//	}
+//	
+//	@Test
+//	public void testremoveClient() throws SQLException, NoSuchAlgorithmException, UnsupportedEncodingException{
+//		Mockito.when(mockStatement.executeUpdate()).thenReturn(Mockito.anyInt());
+//		clientDAO.removeClient(1);
+//	}
+}
+
+

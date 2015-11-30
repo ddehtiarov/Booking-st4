@@ -1,0 +1,336 @@
+package ua.nure.degtuaryov.SummaryTask4.db.dao.derby;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import ua.nure.degtuaryov.SummaryTask4.db.Fields;
+import ua.nure.degtuaryov.SummaryTask4.db.bean.VoyageBean;
+import ua.nure.degtuaryov.SummaryTask4.db.dao.DAOFactory;
+import ua.nure.degtuaryov.SummaryTask4.db.dao.VoyageDAO;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Voyage;
+
+public class DerbyVoyageDAO implements VoyageDAO {
+
+	private static final String SQL_SELECT_ALL_VOYAGES = "SELECT * from voyage order by arrival_time desc";
+	private static final String SQL_SELECT_VOYAGE_BY_ID = "SELECT * from VOYAGE where id=?";
+	private static final String SQL_INSERT_VOYAGE = "INSERT INTO VOYAGE VALUES (default, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String SQL_SELECT_VOYAGE_EXIST = "SELECT * from VOYAGE where train_id=? and route_id=? and arrival_time=?";
+	private static final String SQL_UPDATE_VOYAGE = "UPDATE VOYAGE SET train_id=?, coupe_seat=?, reserved_seat=?, general_seat=?"
+			+ " WHERE id=?";
+	private static final String SQL_UPDATE_VOYAGE_COUPE_SEAT = "UPDATE VOYAGE SET coupe_seat=? WHERE id=?";
+	private static final String SQL_UPDATE_VOYAGE_RESERVED_SEAT = "UPDATE VOYAGE SET reserved_seat=? WHERE id=?";
+	private static final String SQL_UPDATE_VOYAGE_GENERAL_SEAT = "UPDATE VOYAGE SET general_seat=? WHERE id=?";
+	private static final String SQL_DELETE_VOYAGE_BY_ID = "DELETE FROM VOYAGE WHERE id=?";
+	private static final String SQL_SELECT_VOYAGE_BY_ROUTE_ID = "SELECT * from VOYAGE where route_id=?";
+
+	@Override
+	public Voyage findVoyageById(long id) {
+		Connection con = null;
+		PreparedStatement statement = null;
+		Voyage voyage = null;
+		try {
+			con = DerbyDAOFactory.getConnection();
+			statement = con.prepareStatement(SQL_SELECT_VOYAGE_BY_ID);
+			statement.setLong(1, id);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				voyage = obtainVoyage(rs);
+			}
+		} catch (Exception e) {
+			rollbackAndClose(con);
+			e.printStackTrace();
+			return null;
+		} finally {
+			commitAndClose(con);
+		}
+		return voyage;
+	}
+
+	@Override
+	public List<VoyageBean> findAllVoyageBeans() {
+		DAOFactory daoFactory = DAOFactory.getInstance();
+		List<Voyage> voyages = findAllVoyages();
+		List<VoyageBean> result = new ArrayList<>();
+		for (Voyage voyage : voyages) {
+			VoyageBean voyageBean = new VoyageBean();
+			voyageBean.setArrivalTime(voyage.getArrivalTime());
+			voyageBean.setCoupeSeat(voyage.getCoupe_seat());
+			voyageBean.setDepartureTime(voyage.getDepartureTime());
+			voyageBean.setGeneralSeat(voyage.getGeneral_seat());
+			voyageBean.setId(voyage.getId());
+			voyageBean.setReservedSeat(voyage.getReserved_seat());
+			voyageBean
+					.setRouteStationsBean(daoFactory.getRouteDAO().getRouteStationsBeanByRouteId(voyage.getRouteId()));
+			voyageBean.setTrain(daoFactory.getTrainDAO().findTrainById(voyage.getTrainId()));
+			System.out.println("VB!!!" + voyageBean);
+			result.add(voyageBean);
+		}
+		return result;
+	}
+
+	@Override
+	public List<Voyage> findAllVoyages() {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		List<Voyage> result = new ArrayList<Voyage>();
+		try {
+			connection = DerbyDAOFactory.getConnection();
+			statement = connection.prepareStatement(SQL_SELECT_ALL_VOYAGES);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				Voyage voyage = obtainVoyage(rs);
+				result.add(voyage);
+				System.out.println("VOYAGE" + voyage);
+			}
+		} catch (SQLException e) {
+			rollbackAndClose(connection);
+			e.printStackTrace();
+		} finally {
+			commitAndClose(connection);
+		}
+		return result;
+	}
+
+	@Override
+	public List<VoyageBean> findVoyageBeanByRouteId(long id, String date) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		List<Voyage> result = new ArrayList<Voyage>();
+		try {
+			connection = DerbyDAOFactory.getConnection();
+			statement = connection.prepareStatement(SQL_SELECT_VOYAGE_BY_ROUTE_ID);
+			statement.setLong(1, id);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				Voyage voyage = obtainVoyage(rs);
+				String voyageDate = voyage.getArrivalTime().toString().substring(0, 10);
+				if (date.equals(voyageDate)) {
+					result.add(voyage);
+				}
+				System.out.println("VOYAGE" + voyage);
+			}
+			System.out.println("result.size() = " + result.size());
+		} catch (SQLException e) {
+			rollbackAndClose(connection);
+			e.printStackTrace();
+		} finally {
+			commitAndClose(connection);
+		}
+		List<VoyageBean> voyageBeans = new ArrayList<>();
+		for (Voyage voyage : result) {
+			voyageBeans.add(findVoyageBeanByVoyage(voyage));
+		}
+		System.out.println("voyageBeans.size() = " + voyageBeans.size());
+		return voyageBeans;
+	}
+
+	@Override
+	public VoyageBean findVoyageBeanByVoyage(Voyage voyage) {
+		DAOFactory daoFactory = DAOFactory.getInstance();
+		VoyageBean voyageBean = new VoyageBean();
+		if (existVoyageIdByName(voyage)) {
+			Voyage voyage2 = findVoyageById(voyage.getId());
+			voyageBean.setArrivalTime(voyage2.getArrivalTime());
+			voyageBean.setCoupeSeat(voyage2.getCoupe_seat());
+			voyageBean.setDepartureTime(voyage2.getDepartureTime());
+			voyageBean.setGeneralSeat(voyage2.getGeneral_seat());
+			voyageBean.setId(voyage2.getId());
+			voyageBean.setReservedSeat(voyage2.getReserved_seat());
+			voyageBean
+					.setRouteStationsBean(daoFactory.getRouteDAO().getRouteStationsBeanByRouteId(voyage2.getRouteId()));
+			voyageBean.setTrain(daoFactory.getTrainDAO().findTrainById(voyage2.getTrainId()));
+		}
+		return voyageBean;
+	}
+
+	@Override
+	public boolean addVoyage(VoyageBean voyageBean) {
+		Connection connection = null;
+		try {
+			connection = DerbyDAOFactory.getConnection();
+			PreparedStatement statement = connection.prepareStatement(SQL_INSERT_VOYAGE);
+			int k = 1;
+			statement.setLong(k++, voyageBean.getRouteStationsBean().getRoute().getId());
+			statement.setLong(k++, voyageBean.getTrain().getId());
+			statement.setInt(k++, voyageBean.getTrain().getCoupeSeat());
+			statement.setInt(k++, voyageBean.getTrain().getReservedSeat());
+			statement.setInt(k++, voyageBean.getTrain().getGeneralSeat());
+			statement.setTimestamp(k++, voyageBean.getArrivalTime());
+			statement.setTimestamp(k++, voyageBean.getDepartureTime());
+			statement.executeUpdate();
+			statement.close();
+		} catch (Exception ex) {
+			rollbackAndClose(connection);
+			ex.printStackTrace();
+			return false;
+		} finally {
+			commitAndClose(connection);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean removeVoyage(long id) {
+		Connection con = null;
+		PreparedStatement statement = null;
+		try {
+			con = DerbyDAOFactory.getConnection();
+			statement = con.prepareStatement(SQL_DELETE_VOYAGE_BY_ID);
+			statement.setLong(1, id);
+			statement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			commitAndClose(con);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean updateVoyage(VoyageBean voyageBean) {
+		Connection con = null;
+		PreparedStatement statement = null;
+		try {
+			Voyage oldVoyage = findVoyageById(voyageBean.getId());
+			VoyageBean oldBean = findVoyageBeanByVoyage(oldVoyage);
+			int boughtCoupeS = oldBean.getTrain().getCoupeSeat() - oldBean.getCoupeSeat();
+			int boughtReservedS = oldBean.getTrain().getReservedSeat() - oldBean.getReservedSeat();
+			int boughtGeneralS = oldBean.getTrain().getGeneralSeat() - oldBean.getGeneralSeat();
+			if (voyageBean.getTrain().getCoupeSeat() >= boughtCoupeS
+					&& voyageBean.getTrain().getReservedSeat() >= boughtReservedS
+					&& voyageBean.getTrain().getGeneralSeat() >= boughtGeneralS) {
+				con = DerbyDAOFactory.getConnection();
+				statement = con.prepareStatement(SQL_UPDATE_VOYAGE);
+				int k = 1;
+				statement.setLong(k++, voyageBean.getTrain().getId());
+				statement.setInt(k++, voyageBean.getTrain().getCoupeSeat() - boughtCoupeS);
+				statement.setInt(k++, voyageBean.getTrain().getReservedSeat() - boughtReservedS);
+				statement.setInt(k++, voyageBean.getTrain().getGeneralSeat() - boughtGeneralS);
+				statement.setLong(k, voyageBean.getId());
+				statement.executeUpdate();
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			commitAndClose(con);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean existVoyageIdByName(Voyage voyage) {
+		Connection con = null;
+		PreparedStatement statement = null;
+		try {
+			con = DerbyDAOFactory.getConnection();
+			statement = con.prepareStatement(SQL_SELECT_VOYAGE_EXIST);
+			statement.setLong(1, voyage.getTrainId());
+			statement.setLong(2, voyage.getRouteId());
+			statement.setTimestamp(3, voyage.getArrivalTime());
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				return true;
+			}
+		} catch (Exception e) {
+			rollbackAndClose(con);
+			e.printStackTrace();
+			return false;
+		} finally {
+			commitAndClose(con);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean buyTicket(Voyage voyage, String type) {
+		Connection con = null;
+		PreparedStatement statement = null;
+		try {
+			int seats = 0;
+			con = DerbyDAOFactory.getConnection();
+			switch (type) {
+			case "coupe":
+				statement = con.prepareStatement(SQL_UPDATE_VOYAGE_COUPE_SEAT);
+				seats = voyage.getCoupe_seat();
+				break;
+			case "reserved":
+				statement = con.prepareStatement(SQL_UPDATE_VOYAGE_RESERVED_SEAT);
+				seats = voyage.getReserved_seat();
+				break;
+			case "general":
+				statement = con.prepareStatement(SQL_UPDATE_VOYAGE_GENERAL_SEAT);
+				seats = voyage.getGeneral_seat();
+				break;
+			default:
+				throw new Exception();
+			}
+			int k = 1;
+			statement.setInt(k++, seats - 1);
+			statement.setLong(k, voyage.getId());
+			statement.executeUpdate();
+			statement.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			commitAndClose(con);
+		}
+		return true;
+	}
+
+	private Voyage obtainVoyage(ResultSet resultSet) throws SQLException {
+		Voyage voyage = new Voyage();
+		voyage.setId(resultSet.getLong(Fields.ENTITY_ID));
+		voyage.setRouteId(resultSet.getInt(Fields.VOYAGE_ROUTE_ID));
+		voyage.setTrainId(resultSet.getInt(Fields.VOYAGE_TRAIN_ID));
+		voyage.setCoupe_seat(resultSet.getInt(Fields.VOYAGE_COUPE_SEAT));
+		voyage.setReserved_seat(resultSet.getInt(Fields.VOYAGE_RESERVED_SEAT));
+		voyage.setGeneral_seat(resultSet.getInt(Fields.VOYAGE_GENERAL_SEAT));
+		voyage.setArrivalTime(resultSet.getTimestamp(Fields.VOYAGE_ARRIVAL_TIME));
+		voyage.setDepartureTime(resultSet.getTimestamp(Fields.VOYAGE_DEPARTURE_TIME));
+		return voyage;
+	}
+
+	/**
+	 * Rollbacks and close the given connection.
+	 * 
+	 * @param con
+	 *            Connection to be rollbacked and closed.
+	 */
+	private void rollbackAndClose(Connection con) {
+		try {
+			if (con != null) {
+				con.rollback();
+				con.close();
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	/**
+	 * Commits and close the given connection.
+	 * 
+	 * @param con
+	 *            Connection to be committed and closed.
+	 */
+	private void commitAndClose(Connection con) {
+		try {
+			if (con != null) {
+				con.commit();
+				con.close();
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+}

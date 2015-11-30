@@ -1,0 +1,119 @@
+package ua.nure.degtuaryov.SummaryTask4.web.command;
+
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.jstl.core.Config;
+
+import org.apache.log4j.Logger;
+
+import ua.nure.degtuaryov.SummaryTask4.db.Constants;
+import ua.nure.degtuaryov.SummaryTask4.db.bean.RouteStationsBean;
+import ua.nure.degtuaryov.SummaryTask4.db.bean.RouteStationsBean.StationTime;
+import ua.nure.degtuaryov.SummaryTask4.db.dao.DAOFactory;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Route;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Station;
+import ua.nure.degtuaryov.SummaryTask4.web.Path;
+
+/**
+ * AddRouteCommand command.
+ * 
+ * @author Dedtuaryow
+ * 
+ */
+public class AddRouteCommand extends Command {
+
+	private static final long serialVersionUID = 67117600039343528L;
+
+	private static final Logger LOGGER = Logger.getLogger(LoginCommand.class);
+
+	@Override
+	public String execute(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		LOGGER.debug("AddRouteCommand starts");
+		Locale local = new Locale(Config.get(request.getSession(), Config.FMT_LOCALE).toString());
+		ResourceBundle rb = ResourceBundle.getBundle("resources", local);
+		DAOFactory.setDaoFactoryFCN(Constants.DAO_FACTORY);
+		DAOFactory daoFactory = DAOFactory.getInstance();
+		String name = request.getParameter("name");
+		LOGGER.trace("Request parameter: name --> " + name);
+		if (name == null || name.isEmpty() || name.length() > 20) {
+			request.setAttribute("wrong", "Change title. Invalid data!");
+			return Path.COMMAND_VIEW_ADD_ROUTE;
+		} else {
+			Route route = new Route();
+			route.setName(name);
+			if (daoFactory.getRouteDAO().findRouteIdByName(name) == 0) {
+				RouteStationsBean routeStationsBean = new RouteStationsBean();
+				routeStationsBean.setRoute(route);
+				int index = 0;
+				while (request.getParameter("station" + index) != null) {
+					String title = request.getParameter("station" + index);
+					if (daoFactory.getStationDAO().existStationByTitle(title)) {
+						for (StationTime stationTime : routeStationsBean.getStationTimesList()) {
+							if (stationTime.getStation().getTitle().equals(title)) {
+								request.setAttribute("wrong", "You want to add 2 same stations into 1 route");
+								LOGGER.debug("AddRouteCommand ends with wrong");
+								return Path.COMMAND_VIEW_ADD_ROUTE;
+							}
+						}
+						Station station = new Station();
+						station.setTitle(title);
+						routeStationsBean.setStationTimesList(station,
+								Integer.valueOf(request.getParameter("travelTime" + index)),
+								Integer.valueOf(request.getParameter("stopTime" + index)));
+						index++;
+					} else {
+						request.setAttribute("wrong", rb.getString("add_new_route_page.unexisting_station"));
+						LOGGER.debug("AddRouteCommand ends with wrong");
+						return Path.COMMAND_VIEW_ADD_ROUTE;
+					}
+				}
+				if (daoFactory.getStationDAO().existStationByTitle(request.getParameter("lastStation"))) {
+					Station station = new Station();
+					station.setTitle(request.getParameter("lastStation"));
+					for (StationTime stationTime : routeStationsBean.getStationTimesList()) {
+						if (stationTime.getStation().getTitle().equals(station.getTitle())) {
+							request.setAttribute("wrong", "You want to add 2 same stations into 1 route");
+							LOGGER.debug("AddRouteCommand ends with wrong");
+							return Path.COMMAND_VIEW_ADD_ROUTE;
+						}
+					}
+					routeStationsBean.setStationTimesList(station, 0, 0);
+				} else {
+					request.setAttribute("wrong", rb.getString("add_new_route_page.inuse_station"));
+					LOGGER.debug("AddRouteCommand ends with wrong");
+					return Path.COMMAND_VIEW_ADD_ROUTE;
+				}
+				daoFactory.getRouteDAO().addRoute(routeStationsBean);
+				request.setAttribute("success", "You add new route!");
+				if (request.getParameter("returnRoute") != null && !request.getParameter("returnRoute").isEmpty()) {
+					Route retRoute = new Route();
+					retRoute.setName(name + "-r");
+					RouteStationsBean returnRouteStationsBean = new RouteStationsBean();
+					returnRouteStationsBean.setRoute(retRoute);
+					for (int i = routeStationsBean.getStationTimesList().size() - 1; i > 0; i--) {
+						returnRouteStationsBean.setStationTimesList(
+								routeStationsBean.getStationTimesList().get(i).getStation(),
+								routeStationsBean.getStationTimesList().get(i - 1).getTravelTime(),
+								routeStationsBean.getStationTimesList().get(i - 1).getStopTime());
+					}
+					returnRouteStationsBean
+							.setStationTimesList(routeStationsBean.getStationTimesList().get(0).getStation(), 0, 0);
+					daoFactory.getRouteDAO().addRoute(returnRouteStationsBean);
+				}
+			} else {
+				LOGGER.debug("AddRouteCommand ends with wrong");
+				request.setAttribute("wrong", "You want to add route with name that is already in use! Try  again!");
+				return Path.COMMAND_VIEW_ADD_ROUTE;
+			}
+			LOGGER.debug("AddRouteCommand ends successfully");
+		}
+		return Path.COMMAND_VIEW_ALL_ROUTES;
+	}
+
+}

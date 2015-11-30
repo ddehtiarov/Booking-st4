@@ -1,0 +1,21 @@
+package ua.nure.degtuaryov.SummaryTask4.web.command;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import ua.nure.degtuaryov.SummaryTask4.web.Path;
+
+public class ViewAddVoyagePageCommand extends Command {
+
+	private static final long serialVersionUID = 8112886711621049040L;
+
+	@Override
+	public String execute(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		return Path.PAGE_ADD_VOYAGE;
+	}
+
+}

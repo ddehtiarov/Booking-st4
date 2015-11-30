@@ -1,0 +1,246 @@
+
+header_jspf.user.login      = Login
+header_jspf.user.find_train = Find Train
+header_jspf.user.home       = Home
+header_jspf.user.register   = Register
+
+header_jspf.client.logout = Logout
+header_jspf.client.my_tickets  = My tickets
+header_jspf.client.settings = Settings
+
+header_jspf.admin.stations = Edit stations
+header_jspf.admin.routes  = Edit routes
+header_jspf.admin.trains = Edit trains
+header_jspf.admin.voyages = Edit voyages
+header_jspf.admin.users = Edit users
+
+register_client_page.title = Register
+register_client_page.form_name = Register account
+register_client_page.login = Login
+register_client_page.email = Email
+register_client_page.password = Password
+register_client_page.firstname = First name
+register_client_page.secondname = Second name
+register_client_page.surname = Surname
+register_client_page.confpass = Confirm pass
+register_client_page.complete_all_fields = Please, complete all the fields and continue registration!
+register_client_page.login_in_use = Login is already in use! Please, change your login!
+register_client_page.reg_success = Cool!We sent you some information, check your email and login!
+
+login_client_page.title = Login
+login_client_page.form_name = Login account
+login_client_page.login = Login
+login_client_page.password = Password
+login_client_page.login_error = Client doesn't exist! Please, check your login/password!
+
+find_train_main_page.button.find_train = Find train
+find_train_main_page.title = Find train
+find_train_main_page.form_name = Choose train
+find_train_main_page.wherefrom = Wherefrom
+find_train_main_page.whereto = Whereto
+find_train_main_page.date_format = Date: format
+find_train_main_page.error_in_st_name = Choose station from station list.
+find_train_main_page.nothing_found = There are no trains at this route.
+
+edit_train_main_page.title = All trains
+edit_train_main_page.form_name = Trains List
+edit_train_main_page.name = Name
+edit_train_main_page.coupe_seat = Coupe seats
+edit_train_main_page.reserved_seat = Reserved seats
+edit_train_main_page.general_seats = General seats
+edit_train_main_page.button.add_train = Add train
+edit_train_main_page.button.edit = Edit
+edit_train_main_page.button.delete = Delete
+
+add_new_train_page.title = Add train
+add_new_train_page.form_name = Add new train
+add_new_train_page.name = Name
+add_new_train_page.coupe_seat = Coupe seats
+add_new_train_page.reserved_seat = Reserved seats
+add_new_train_page.general_seats = General seats
+add_new_train_page.button.add_train = Add train
+add_new_train_page.button.back_to_trains = Back to train's list
+
+delete_train_page.title = Delete train
+delete_train_page.sure_message = Are you sure? Delete train with id
+delete_train_page.attantion_message = Attantion!! All routes, voyages, orders that contain this train will be deleted too, be carefull!
+delete_train_page.train_name = Train name
+delete_train_page.button.delete = Delete train
+delete_train_page.button.back_to_trains = Back to train's list
+
+edit_train_page.title = Edit train
+edit_train_page.form_name = Edit train with id
+edit_train_page.name = Name
+edit_train_page.coupe_seat = Coupe seats
+edit_train_page.reserved_seat = Reserved seats
+edit_train_page.general_seats = General seats
+edit_train_page.button.edit_train = Edit train info
+edit_train_page.button.back_to_trains = Back to train's list
+
+edit_station_main_page.title = All stations
+edit_station_main_page.form_name = Stations List
+edit_station_main_page.station.title = Title
+edit_station_main_page.button.add_station = Add station
+edit_station_main_page.button.delete = Delete
+
+add_new_station_page.title = Add station
+add_new_station_page.form_name = Add new station
+add_new_station_page.station.title = Title
+add_new_station_page.button.back_to_stations = Back to station's list
+add_new_station_page.error_message = Station is already in exist! Please, change a title!
+
+edit_route_main_page.title = All routes
+edit_route_main_page.form_name = Routes List
+edit_route_main_page.name = Name
+edit_route_main_page.button.add_route = Add route
+edit_route_main_page.button.show_info = Show INFO
+edit_route_main_page.button.delete = Delete
+
+add_new_route_page.title = Add route
+add_new_route_page.form_name = Add new route
+add_new_route_page.name = Name
+add_new_route_page.last_station = Last station
+add_new_route_page.first_station = First station
+add_new_route_page.station = Station
+add_new_route_page.button.station = station
+add_new_route_page.chechbox.return_route = Create return route
+add_new_route_page.button.back_to_routes = Back to route's list
+add_new_route_page.button.add = Add route
+add_new_route_page.travel_time = Travel Time(min)
+add_new_route_page.stop_time = Stop Time(min)
+add_new_route_page.inuse_station = You want to add route with name that is already in use! Try again!
+add_new_route_page.unexisting_station = You want to add route with unexisting station! Try again!
+
+route_station_main_page.title = Station in route
+route_station_main_page.form_name = Stations List from route
+route_station_main_page.position = Position
+route_station_main_page.station.title = Title
+route_station_main_page.travel_time = Travel Time
+route_station_main_page.stop_time = Stop Time
+route_station_main_page.back = Back
+
+delete_route_page.title = Delete route
+delete_route_page.form_name = Are you sure? Delete route with id
+delete_route_page.attantion_message = Attantion!! All voyages, orders and trips that contain this route will be deleted too, be carefull!
+delete_route_page.route_name = Route name
+delete_route_page.delete = Delete route
+delete_route_page.button.back_to_routes = Back to route's list
+
+edit_voyage_main_page.title = All voyages
+edit_voyage_main_page.form_name = Voyages List
+edit_voyage_main_page.train_info = Train info
+edit_voyage_main_page.vayage_info = Voyage info
+edit_voyage_main_page.from_to = From/To
+edit_voyage_main_page.arrival_time = Arrival Time
+edit_voyage_main_page.departure_time = Departure Time
+edit_voyage_main_page.coupe_seat = Coupe seats
+edit_voyage_main_page.reserved_seat = Reserved seats
+edit_voyage_main_page.general_seats = General seats
+edit_voyage_main_page.button.add_voyage = Add voyage
+edit_voyage_main_page.button.edit = Edit
+edit_voyage_main_page.button.delete = Delete
+
+add_voyage_page.title = Add voyage
+add_voyage_page.form_name = Add new voyage
+add_voyage_page.route = Route
+add_voyage_page.train = Train
+add_voyage_page.date = Date
+add_voyage_page.button.add = Add voyage
+add_voyage_page.button.back_to_voyages = Back to voyage's list
+add_voyage_page.change_date = Change date!
+add_voyage_page.add_message = Add!	
+
+edit_voyage_page.title = Edit voyage
+edit_voyage_page.form_name = Edit voyage
+edit_voyage_page.train_name = Bought seats IN TRAIN
+edit_voyage_page.coupe_seat = Coupe seats
+edit_voyage_page.reserved_seat = Reserved seats
+edit_voyage_page.general_seats = General seats
+edit_voyage_page.route = Route
+edit_voyage_page.train = Train
+edit_voyage_page.date = Date
+edit_voyage_page.button.edit = Edit voyage
+edit_voyage_page.button.back_to_voyages = Back to voyage's list
+edit_voyage_page.train_error = You can not change the train at this voyage, train contains fewer tickets than already purchased!
+
+edit_client_main_page.title = All clients
+edit_client_main_page.form_name = Clients List
+edit_client_main_page.login = Login
+edit_client_main_page.email = Email
+edit_client_main_page.password = Password
+edit_client_main_page.firstname = First name
+edit_client_main_page.secondname = Second name
+edit_client_main_page.surname = Surname
+edit_client_main_page.role_id = Role Id
+edit_client_main_page.button.edit = Edit
+edit_client_main_page.button.delete = Delete
+
+edit_client_page.title = Edit client
+edit_client_page.form_name = Edit client with id
+edit_client_page.login = Login
+edit_client_page.email = Email
+edit_client_page.password = Password
+edit_client_page.firstname = First name
+edit_client_page.secondname = Second name
+edit_client_page.surname = Surname
+edit_client_page.role_id = Role
+edit_client_page.button.edit = Change profile
+edit_client_main_page.button.back_to_clients = Back to client's list
+edit_client_main_page.success_message = You update info!
+edit_client_main_page.error_message = Error!
+
+delete_client_page.title = Delete client
+delete_client_page.form_name = Are you sure? Delete user with id
+delete_client_page.login = Login
+delete_client_page.email = Email
+delete_client_page.button.delete = Delete profile
+delete_client_page.button.back_to_clients = Back to client's list
+
+chose_train_page_success.train_info = Train info
+chose_train_page_success.vayage_info = Voyage info
+chose_train_page_success.from_to = From/To
+chose_train_page_success.arrival_time = Arrival Time
+chose_train_page_success.departure_time = Departure Time
+chose_train_page_success.seats = Seats
+chose_train_page_success.button.buy_coupe = Buy coupe
+chose_train_page_success.button.buy_reserved = Buy reserved
+chose_train_page_success.button.buy_general = Buy general
+
+buy_ticket_page.title = Buy ticket
+buy_ticket_page.button.buy_ticket = Buy ticket
+buy_ticket_page.button.back = Back
+buy_ticket_page.invalid_type_of_seat_error = Invalid type of seat!
+buy_ticket_page.invalid_parametrs_error = Invalid parametrs!
+buy_ticket_page.login_into_system_error = Login into system and continue buying!
+buy_ticket_page.error = Try again later!
+buy_ticket_page.somebody_quiqlier_error = You cann't buy seat. Somebody do it early!
+buy_ticket_page.invalid_error = Invalid parametrs. Cant to this!
+
+my_tickets_main_page.title = My tickets
+my_tickets_main_page.form_name = All my tickets
+my_tickets_main_page.info = Info
+my_tickets_main_page.from_to = From/To
+my_tickets_main_page.arrival_time = Arrival Time
+my_tickets_main_page.departure_time = Departure Time
+my_tickets_main_page.seat_number = Seat number
+my_tickets_main_page.benefit = Benefit
+my_tickets_main_page.date = Date
+my_tickets_main_page.price = Price(grn)
+my_tickets_main_page.button.show_ticket = Show ticket
+my_tickets_main_page.button.save = Save
+
+show_ticket_page.title = Ticket info
+show_ticket_page.back = Back
+
+settings_main_page.title = Settings
+settings_main_page.form_name = Settings
+settings_main_page.login = Login
+settings_main_page.email = Email
+settings_main_page.password = Password
+settings_main_page.firstname = First name
+settings_main_page.secondname = Second name
+settings_main_page.surname = Surname
+settings_main_page.language = Language
+settings_main_page.button.edit = Change profile
+settings_main_page.message = You update info!
+settings_main_page.russian = \u0420\u0443\u0441\u0441\u043A\u0438\u0439

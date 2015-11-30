@@ -1,0 +1,154 @@
+package ua.nure.degtuaryov.SummaryTask4.db.dao.derby;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import ua.nure.degtuaryov.SummaryTask4.db.Fields;
+import ua.nure.degtuaryov.SummaryTask4.db.dao.TrainDAO;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Train;
+import ua.nure.degtuaryov.SummaryTask4.web.command.NoCommand;
+
+public class DerbyTrainDAO implements TrainDAO {
+
+	private static final String SQL_SELECT_ALL_TRAINSS = "SELECT * from TRAIN";
+	private static final String SQL_SELECT_TRAIN_BY_ID = "SELECT * from TRAIN where id=?";
+	private static final String SQL_INSERT_TRAIN = "INSERT INTO TRAIN VALUES (default, ?, ?, ?, ?)";
+	private static final String SQL_UPDATE_TRAIN = "UPDATE TRAIN SET name=?, coupe_seat=?, reserved_seat=?, general_seat=?"
+			+ " WHERE id=?";
+	private static final String SQL_DELETE_TRAIN_BY_ID = "DELETE FROM TRAIN WHERE id=?";
+	private static final Logger LOG = Logger.getLogger(NoCommand.class);
+
+	@Override
+	public Train findTrainById(long id) {
+		Connection con = null;
+		PreparedStatement statement = null;
+		Train train = null;
+		ResultSet rs = null;
+		try {
+			con = DerbyDAOFactory.getConnection();
+			statement = con.prepareStatement(SQL_SELECT_TRAIN_BY_ID);
+			statement.setLong(1, id);
+			rs = statement.executeQuery();
+			if (rs.next()) {
+				train = obtainTrain(rs);
+			}
+		} catch (Exception e) {
+			DerbyDAOFactory.rollbackAndCloseConnectionStatment(con, statement);
+			LOG.error(e.getMessage());
+			return null;
+		} finally {
+			DerbyDAOFactory.commitAndCloseConnectionStatmentResSet(con, statement, rs);
+		}
+		return train;
+	}
+
+	@Override
+	public List<Train> findAllTrains() {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		List<Train> result = new ArrayList<Train>();
+		ResultSet rs = null;
+		try {
+			connection = DerbyDAOFactory.getConnection();
+			statement = connection.prepareStatement(SQL_SELECT_ALL_TRAINSS);
+			rs = statement.executeQuery();
+			while (rs.next()) {
+				Train train = obtainTrain(rs);
+				System.out.println(train.getName());
+				result.add(train);
+			}
+		} catch (SQLException e) {
+			DerbyDAOFactory.rollbackAndCloseConnectionStatment(connection, statement);
+			LOG.error(e.getMessage());
+		} finally {
+			DerbyDAOFactory.commitAndCloseConnectionStatmentResSet(connection, statement, rs);
+		}
+		return result;
+	}
+
+	@Override
+	public boolean addTrain(Train train) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = DerbyDAOFactory.getConnection();
+			statement = connection.prepareStatement(SQL_INSERT_TRAIN);
+			int k = 1;
+			statement.setString(k++, train.getName());
+			statement.setInt(k++, train.getCoupeSeat());
+			statement.setInt(k++, train.getReservedSeat());
+			statement.setInt(k++, train.getGeneralSeat());
+			statement.executeUpdate();
+			statement.close();
+		} catch (Exception ex) {
+			DerbyDAOFactory.rollbackAndCloseConnectionStatment(connection, statement);
+			LOG.error(ex.getMessage());
+			return false;
+		} finally {
+			DerbyDAOFactory.commitAndCloseConnectionStatment(connection, statement);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean removeTrain(long id) {
+		Connection con = null;
+		PreparedStatement statement = null;
+		try {
+			con = DerbyDAOFactory.getConnection();
+			statement = con.prepareStatement(SQL_DELETE_TRAIN_BY_ID);
+			statement.setLong(1, id);
+			statement.executeUpdate();
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			DerbyDAOFactory.rollbackAndCloseConnectionStatment(con, statement);
+			return false;
+		} finally {
+			DerbyDAOFactory.commitAndCloseConnectionStatment(con, statement);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean updateTrain(Train train) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = DerbyDAOFactory.getConnection();
+			statement = connection.prepareStatement(SQL_UPDATE_TRAIN);
+			int k = 1;
+			statement.setString(k++, train.getName());
+			statement.setInt(k++, train.getCoupeSeat());
+			statement.setInt(k++, train.getReservedSeat());
+			statement.setInt(k++, train.getGeneralSeat());
+			statement.setLong(k, train.getId());
+			statement.executeUpdate();
+			statement.close();
+		} catch (Exception ex) {
+			DerbyDAOFactory.rollbackAndCloseConnectionStatment(connection, statement);
+			LOG.error(ex.getMessage());
+			return false;
+		} finally {
+			DerbyDAOFactory.commitAndCloseConnectionStatment(connection, statement);
+		}
+		return true;
+	}
+	
+	private Train obtainTrain(ResultSet resultSet) throws SQLException {
+		Train train = new Train();
+		train.setId(resultSet.getLong(Fields.ENTITY_ID));
+		train.setName(resultSet.getString(Fields.TRAIN_NAME));
+		train.setCoupeSeat(resultSet.getInt(Fields.TRAIN_COUPE_SEAT));
+		train.setReservedSeat(resultSet.getInt(Fields.TRAIN_RESERVED_SEAT));
+		train.setGeneralSeat(resultSet.getInt(Fields.TRAIN_GENERAL_SEAT));
+		System.out.println("id:" + train.getId());
+		return train;
+	}
+
+}

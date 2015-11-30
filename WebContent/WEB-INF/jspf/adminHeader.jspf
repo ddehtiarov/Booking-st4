@@ -1,0 +1,18 @@
+<%@ include file="/WEB-INF/jspf/directive/page.jspf"%>
+<%@ include file="/WEB-INF/jspf/directive/taglib.jspf"%>
+
+<c:url var="station" value="controller?command=viewAllStations" />
+<c:url var="route" value="controller?command=viewAllRoutes" />
+<c:url var="users" value="controller?command=viewAllClients" />
+<c:url var="train" value="controller?command=viewAllTrains" />
+<c:url var="voyages" value="controller?command=viewAllVoyages" />
+
+<div id="hmenu">
+	<ul>
+		<li><a href="${train}"><fmt:message key="header_jspf.admin.trains" /></a></li>
+		<li><a href="${station}"><fmt:message key="header_jspf.admin.stations" /></a></li>
+		<li><a href="${route}"><fmt:message key="header_jspf.admin.routes" /></a></li>
+		<li><a href="${voyages}"><fmt:message key="header_jspf.admin.voyages" /></a></li>
+		<li><a href="${users}"><fmt:message key="header_jspf.admin.users" /></a></li>
+	</ul>
+</div>

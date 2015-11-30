@@ -1,0 +1,72 @@
+package ua.nure.degtuaryov.SummaryTask4.web.command;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+
+import ua.nure.degtuaryov.SummaryTask4.db.Constants;
+import ua.nure.degtuaryov.SummaryTask4.db.dao.DAOFactory;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Train;
+import ua.nure.degtuaryov.SummaryTask4.web.Path;
+
+/**
+ * EditTrainCommand command.
+ * 
+ * @author Dedtuaryow
+ * 
+ */
+public class EditTrainCommand extends Command {
+
+	private static final Logger LOG = Logger.getLogger(LoginCommand.class);
+
+	private static final String WRONG = "wrong";
+	
+	private static final long serialVersionUID = 63015267474737L;
+
+	@Override
+	public String execute(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		String forward = Path.PAGE_ERROR_PAGE;
+		LOG.debug("EditTrainCommand starts");
+		if (request.getAttribute("id") == null || request.getAttribute("id").toString().isEmpty()) {
+			return forward;
+		} else {
+			Long id = (Long) request.getAttribute("id");
+			DAOFactory.setDaoFactoryFCN(Constants.DAO_FACTORY);
+			DAOFactory daoFactory = DAOFactory.getInstance();
+
+			String name = request.getParameter("name");
+			int coupeSeat = Integer.valueOf(request.getParameter("coupeSeat"));
+			int reservedSeat = Integer.valueOf(request.getParameter("reservedSeat"));
+			int generalSeat = Integer.valueOf(request.getParameter("generalSeat"));
+
+			Train train = new Train();
+			train.setId(id);
+			train.setName(name);
+			train.setCoupeSeat(coupeSeat);
+			train.setReservedSeat(reservedSeat);
+			train.setGeneralSeat(generalSeat);
+			LOG.debug("CangeCommand# train :" + train);
+			if (name == null || name.isEmpty() || coupeSeat < 0 || reservedSeat < 0 || generalSeat < 0) {
+				request.setAttribute(WRONG, "Please, complete all the fields and continue!");
+			} else {
+				if (daoFactory.getTrainDAO().updateTrain(train)) {
+					request.setAttribute("success", "You update this train!Yehooo!");
+					LOG.debug("ChangeTrainCommand:" + train);
+					forward = Path.COMMAND_VIEW_ALL_TRAINS;
+				} else {
+					request.setAttribute(WRONG, "Error");
+					forward = Path.COMMAND_EDIT_TRAIN;
+				}
+				request.setAttribute("train", train);
+			}
+		}
+		LOG.debug("EditTrainCommand ends");
+		return forward;
+	}
+
+}

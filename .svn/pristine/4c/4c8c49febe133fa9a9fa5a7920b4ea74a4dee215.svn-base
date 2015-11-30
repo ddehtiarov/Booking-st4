@@ -1,0 +1,74 @@
+package ua.nure.degtuaryov.SummaryTask4.web.command;
+
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
+
+import org.apache.log4j.Logger;
+
+import ua.nure.degtuaryov.SummaryTask4.db.Constants;
+import ua.nure.degtuaryov.SummaryTask4.db.Role;
+import ua.nure.degtuaryov.SummaryTask4.db.dao.DAOFactory;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Client;
+import ua.nure.degtuaryov.SummaryTask4.web.Path;
+
+/**
+ * Login command.
+ * 
+ * @author D.Kolesnikov
+ * 
+ */
+public class LoginCommand extends Command {
+
+	private static final long serialVersionUID = -3071536593627692473L;
+
+	private static final Logger log = Logger.getLogger(LoginCommand.class);
+
+	
+
+	@Override
+	public String execute(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		Locale local = new Locale(Config.get(request.getSession(), Config.FMT_LOCALE).toString());
+		ResourceBundle rb = ResourceBundle.getBundle("resources", local);
+		log.debug("Command starts");
+		DAOFactory.setDaoFactoryFCN(Constants.DAO_FACTORY);
+		DAOFactory daoFactory = DAOFactory.getInstance();
+		HttpSession session = request.getSession();
+		String login = request.getParameter("login");
+		log.trace("Request parameter: loging --> " + login);
+		String password = request.getParameter("password");
+		log.trace("Request parameter: password --> " + password);
+		String forward = "";
+		request.setAttribute("login", login);
+		request.setAttribute("password", password);
+		Client client = null;
+		Role clientRole = null;
+		if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
+			request.setAttribute("wrong", "Please, write your login/password!");
+			forward = Path.COMMAND_VIEW_LOGIN_PAGE;
+		} else {
+			client = daoFactory.getClientDAO().findClientByLoginPass(login, password);
+			if (client != null) {
+				request.setAttribute("success", "Cool!");
+				clientRole = Role.getRole(client);
+				System.out.println("LoginCommand:" + client);
+				forward = Path.COMMAND_VIEW_FIND_TRAIN;
+				
+			} else {
+				request.setAttribute("wrong", rb.getString("login_client_page.login_error"));
+				forward = Path.COMMAND_VIEW_LOGIN_PAGE;
+			}
+		}
+		session.setAttribute("client", client);
+		session.setAttribute("clientRole", clientRole);
+		return forward;
+	}
+
+}

@@ -1,0 +1,69 @@
+package ua.nure.degtuaryov.SummaryTask4.web.command;
+
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.jstl.core.Config;
+
+import org.apache.log4j.Logger;
+
+import ua.nure.degtuaryov.SummaryTask4.db.Constants;
+import ua.nure.degtuaryov.SummaryTask4.db.bean.VoyageBean;
+import ua.nure.degtuaryov.SummaryTask4.db.dao.DAOFactory;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Train;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Voyage;
+import ua.nure.degtuaryov.SummaryTask4.web.Path;
+
+/**
+ * EditVoyageCommand command.
+ * 
+ * @author Dedtuaryow
+ * 
+ */
+public class EditVoyageCommand extends Command {
+
+	private static final Logger LOGGER = Logger.getLogger(LoginCommand.class);
+
+	private static final long serialVersionUID = 630136867298965747L;
+
+	@Override
+	public String execute(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		LOGGER.debug("EditVoyageCommand starts");
+		String forward = Path.PAGE_ERROR_PAGE;
+		Long id = (Long) request.getAttribute("id");
+		DAOFactory.setDaoFactoryFCN(Constants.DAO_FACTORY);
+		DAOFactory daoFactory = DAOFactory.getInstance();
+		if(request.getParameter("trainId")!=null || !request.getParameter("trainId").isEmpty()){
+		int trainId = Integer.valueOf(request.getParameter("trainId"));
+
+		Voyage voyage = daoFactory.getVoyageDAO().findVoyageById(id);
+		VoyageBean voyageBean1 = daoFactory.getVoyageDAO().findVoyageBeanByVoyage(voyage);
+		request.setAttribute("voyageBean", voyageBean1);
+		VoyageBean voyageBean = voyageBean1;
+		Train train = daoFactory.getTrainDAO().findTrainById(trainId);
+		voyageBean.setTrain(train);
+
+		if (daoFactory.getVoyageDAO().updateVoyage(voyageBean)) {
+			forward = Path.COMMAND_VIEW_ALL_VOYAGES;
+			request.setAttribute("success", "Yohho");
+		} else {
+			Locale local = new Locale(Config.get(request.getSession(), Config.FMT_LOCALE).toString());
+			ResourceBundle rb = ResourceBundle.getBundle("resources", local);
+			request.setAttribute("trains", daoFactory.getTrainDAO().findAllTrains());
+			request.setAttribute("wrong", rb.getString("edit_voyage_page.train_error"));
+			forward = Path.PAGE_EDIT_VOYAGE;
+		}}else {
+			forward = Path.PAGE_EDIT_VOYAGE;
+			request.setAttribute("trains", daoFactory.getTrainDAO().findAllTrains());
+			request.setAttribute("wrong", "Choose train!");
+		}
+		LOGGER.debug("EditVoyageCommand ends");
+		return forward;
+	}
+
+}

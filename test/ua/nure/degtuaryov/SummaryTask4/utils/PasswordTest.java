@@ -1,0 +1,27 @@
+package ua.nure.degtuaryov.SummaryTask4.utils;
+
+import static org.junit.Assert.*;
+
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import ua.nure.degtuaryov.SummaryTask4.utils.Password;
+
+public class PasswordTest {
+	
+	static Password pass;
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		pass = new Password();
+	}
+
+	@Test
+	public void testHash() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		assertEquals(Password.hash("admin"), "21232F297A57A5A743894A0E4A801FC3");
+	}
+
+}

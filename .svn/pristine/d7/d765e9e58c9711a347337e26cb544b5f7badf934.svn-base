@@ -1,0 +1,84 @@
+package ua.nure.degtuaryov.SummaryTask4.db.dao.derby;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import ua.nure.degtuaryov.SummaryTask4.db.dao.ClientDAO;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Client;
+
+public class DerbyClientDAOTest {
+
+	static private DerbyClientDAO service;
+	static private ClientDAO dao;
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		dao = Mockito.mock(ClientDAO.class); // here is the actual mocking call
+
+		service = new DerbyClientDAO();
+
+	}
+
+	@Test
+	public void testFindClientByLogin() throws SQLException {
+		List all = new LinkedList();
+		all.add(new Client());
+		all.add(new Client());
+		List<Client> result = new ArrayList<Client>();
+
+		DerbyDAOFactory daoFactory = Mockito.mock(DerbyDAOFactory.class);
+		Connection connection = daoFactory.getConnection();
+		PreparedStatement statement = Mockito.mock(PreparedStatement.class);
+		ResultSet rs = Mockito.mock(ResultSet.class);
+		service.findAllClients();
+
+		Mockito.when(DerbyDAOFactory.getConnection()).thenReturn(connection);
+		
+		Mockito.when(connection.prepareStatement("SELECT * from CLIENT")).thenReturn(statement);
+		
+		Mockito.when(statement.executeQuery()).thenReturn(rs);
+		
+		Mockito.when(rs.next()).thenReturn(false);
+		
+	}
+
+	@Test
+	public void testFindClientByLoginPass() {
+		// fail("Not yet implemented");
+	}
+
+	@Test
+	public void testFindClientById() {
+		// fail("Not yet implemented");
+	}
+
+	@Test
+	public void testFindAllClients() {
+		// fail("Not yet implemented");
+	}
+
+	@Test
+	public void testAddClient() {
+		// fail("Not yet implemented");
+	}
+
+	@Test
+	public void testRemoveClient() {
+		// fail("Not yet implemented");
+	}
+
+	@Test
+	public void testUpdateClient() {
+		// fail("Not yet implemented");
+	}
+
+}

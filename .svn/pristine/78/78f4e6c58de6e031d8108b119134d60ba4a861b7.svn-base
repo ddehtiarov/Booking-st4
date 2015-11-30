@@ -1,0 +1,30 @@
+package ua.nure.degtuaryov.SummaryTask4.db.dao;
+
+import java.util.List;
+
+import ua.nure.degtuaryov.SummaryTask4.db.bean.BookingBean;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Booking;
+
+/**
+ * Interface dao producing implementations BookingDAO
+ * 
+ * @author Degtuaryow
+ *
+ */
+public interface BookingDAO {
+
+	boolean addBooking(Booking booking);
+	
+	boolean removeBooking(long id);
+	
+	List<Booking> fingAllBookingByClientId(long id);
+	
+	Booking fingBookingById(long id);
+	
+	Booking fingBookingByClientId(long bookingId, long clientId);
+	
+	BookingBean fingBookingBeanByBooking(Booking booking);	
+	
+	int getMaxseatNumber();
+	
+}

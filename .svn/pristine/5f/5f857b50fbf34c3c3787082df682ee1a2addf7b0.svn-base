@@ -1,0 +1,20 @@
+package ua.nure.degtuaryov.SummaryTask4.web.filter;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+public class EncodingFilterTest {
+
+	static EncodingFilter enf;
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		enf = new EncodingFilter();
+	}
+
+	@Test
+	public void testDestroy() {
+		enf.destroy();
+	}
+
+}

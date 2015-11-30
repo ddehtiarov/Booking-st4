@@ -1,0 +1,44 @@
+package ua.nure.degtuaryov.SummaryTask4.web.command;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import ua.nure.degtuaryov.SummaryTask4.db.Constants;
+import ua.nure.degtuaryov.SummaryTask4.db.bean.BookingBean;
+import ua.nure.degtuaryov.SummaryTask4.db.dao.DAOFactory;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Booking;
+import ua.nure.degtuaryov.SummaryTask4.db.entity.Client;
+import ua.nure.degtuaryov.SummaryTask4.web.Path;
+
+public class ShowTicketInfoCommand extends Command {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -178602392126745912L;
+
+	@Override
+	public String execute(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		DAOFactory.setDaoFactoryFCN(Constants.DAO_FACTORY);
+		DAOFactory daoFactory = DAOFactory.getInstance();
+		String forward = Path.PAGE_ERROR_PAGE;
+		Long id = (Long) (request.getAttribute("id"));
+		Client client = daoFactory.getClientDAO()
+				.findClientByLogin(((Client) request.getSession().getAttribute("client")).getLogin());
+		Booking booking = daoFactory.getBookingDAO().fingBookingByClientId(id, client.getId());
+		if (booking != null) {
+			BookingBean bookingBean = daoFactory.getBookingDAO().fingBookingBeanByBooking(booking);
+			request.setAttribute("bookingBean", bookingBean);
+			forward = Path.PAGE_OUN_TICKET;
+		}else {
+			request.setAttribute("wrong", "invalid parametrs!");
+			forward = Path.PAGE_OUN_TICKET;
+		}
+		return forward;
+	}
+
+}

@@ -1,0 +1,92 @@
+package ua.nure.degtuaryov.SummaryTask4.db.entity;
+
+import java.sql.Timestamp;
+
+/**
+ * 
+ * Voyage class entity from database, extends Entity
+ * 
+ * @author Degtuaryow
+ *
+ */
+public class Voyage extends Entity {
+
+	private static final long serialVersionUID = 8086016371082249763L;
+
+	private long routeId;
+
+	private long trainId;
+
+	private Timestamp arrivalTime;
+
+	private Timestamp departureTime;
+
+	private int coupe_seat;
+
+	private int reserved_seat;
+
+	private int general_seat;
+
+	public long getRouteId() {
+		return routeId;
+	}
+
+	public void setRouteId(long routeId) {
+		this.routeId = routeId;
+	}
+
+	public long getTrainId() {
+		return trainId;
+	}
+
+	public void setTrainId(long trainId2) {
+		this.trainId = trainId2;
+	}
+
+	public Timestamp getArrivalTime() {
+		return arrivalTime;
+	}
+
+	public void setArrivalTime(Timestamp arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+
+	public Timestamp getDepartureTime() {
+		return departureTime;
+	}
+
+	public void setDepartureTime(Timestamp departureTime) {
+		this.departureTime = departureTime;
+	}
+
+	public int getCoupe_seat() {
+		return coupe_seat;
+	}
+
+	public void setCoupe_seat(int coupe_seat) {
+		this.coupe_seat = coupe_seat;
+	}
+
+	public int getReserved_seat() {
+		return reserved_seat;
+	}
+
+	public void setReserved_seat(int reserved_seat) {
+		this.reserved_seat = reserved_seat;
+	}
+
+	public int getGeneral_seat() {
+		return general_seat;
+	}
+
+	public void setGeneral_seat(int general_seat) {
+		this.general_seat = general_seat;
+	}
+
+	@Override
+	public String toString() {
+		return "Voyage [routeId=" + routeId + ", trainId=" + trainId + ", arrivalTime=" + arrivalTime
+				+ ", departureTime=" + departureTime + ", coupe_seat=" + coupe_seat + ", reserved_seat=" + reserved_seat
+				+ ", general_seat=" + general_seat + "]";
+	}	
+}
