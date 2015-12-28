@@ -16,7 +16,7 @@ import ua.nure.degtuaryov.SummaryTask4.web.command.LoginCommand;
 
 public class MailSender {
 	// input here your mail credentials
-	private static final String USERNAME = "degtuaryow.d@gmail.com";
+	private static final String USERNAME = "myemaild@gmail.com";
 	private static final String PASSWORD = "********";
 	private static final Logger LOGGER = Logger.getLogger(LoginCommand.class);
 
